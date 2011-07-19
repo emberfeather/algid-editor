@@ -52,6 +52,7 @@
 				onShiftEnter: {keepDefault:false, replaceWith:'<br />\n'},
 				onCtrlEnter: {keepDefault:false, openWith:'\n<p>', closeWith:'</p>\n'},
 				onTab: {keepDefault:false, openWith:'	 '},
+				previewParserPath: 'plugins/editor/preview.cfm?type=html',
 				markupSet: [
 					{name:'Heading 1', key:'1', openWith:'<h1(!( class="[![Class]!]")!)>', closeWith:'</h1>', placeHolder:'Your title here...' },
 					{name:'Heading 2', key:'2', openWith:'<h2(!( class="[![Class]!]")!)>', closeWith:'</h2>', placeHolder:'Your title here...' },
@@ -72,12 +73,14 @@
 					{name:'Picture', key:'P', replaceWith:'<img src="[![Source:!:http://]!]" alt="[![Alternative text]!]" />' },
 					{name:'Link', key:'L', openWith:'<a href="[![Link:!:http://]!]"(!( title="[![Title]!]")!)>', closeWith:'</a>', placeHolder:'Your text to link...' },
 					{separator:'---------------' },
-					{name:'Clean', className:'clean', replaceWith:function(markitup) { return markitup.selection.replace(/<(.*?)>/g, ""); } }
+					{name:'Clean', className:'clean', replaceWith:function(markitup) { return markitup.selection.replace(/<(.*?)>/g, ""); } },
+					{name:'Preview', call:'preview', className:'preview' }
 				]
 			},
 			markdown: {
 				nameSpace: 'markdown',
 				onShiftEnter: {keepDefault:false, openWith:'\n\n'},
+				previewParserPath: 'plugins/editor/preview.cfm?type=markdown',
 				markupSet: [
 					{name:'Heading 1', key:'1', openWith:'# ', placeHolder:'Your title here...' },
 					{name:'Heading 2', key:'2', openWith:'## ', placeHolder:'Your title here...' },
@@ -98,12 +101,15 @@
 					{name:'Link', key:'L', openWith:'[', closeWith:']([![Url:!:http://]!] "[![Title]!]")', placeHolder:'Your text to link here...' },
 					{separator:'---------------'},	
 					{name:'Quotes', openWith:'> '},
-					{name:'Code Block / Code', openWith:'(!(\t|!|`)!)', closeWith:'(!(`)!)'}
+					{name:'Code Block / Code', openWith:'(!(\t|!|`)!)', closeWith:'(!(`)!)'},
+					{separator:'---------------'},
+					{name:'Preview', call:'preview', className:"preview"}
 				]
 			},
 			textile: {
 				nameSpace: 'textile',
 				onShiftEnter: {keepDefault:false, replaceWith:'\n\n'},
+				previewParserPath: 'plugins/editor/preview.cfm?type=textile',
 				markupSet: [
 					{name:'Heading 1', key:'1', openWith:'h1(!(([![Class]!]))!). ', placeHolder:'Your title here...' },
 					{name:'Heading 2', key:'2', openWith:'h2(!(([![Class]!]))!). ', placeHolder:'Your title here...' },
@@ -124,12 +130,15 @@
 					{name:'Link', openWith:'"', closeWith:'([![Title]!])":[![Link:!:http://]!]', placeHolder:'Your text to link here...' },
 					{separator:'---------------' },
 					{name:'Quotes', openWith:'bq(!(([![Class]!]))!). '},
-					{name:'Code', openWith:'@', closeWith:'@'}
+					{name:'Code', openWith:'@', closeWith:'@'},
+					{separator:'---------------'},
+					{name:'Preview', call:'preview', className:"preview"}
 				]
 			},
 			wiki: {
 				nameSpace: 'wiki',
 				onShiftEnter: {keepDefault:false, replaceWith:'\n\n'},
+				previewParserPath: 'plugins/editor/preview.cfm?type=mediawiki',
 				markupSet: [
 					{name:'Heading 1', key:'1', openWith:'== ', closeWith:' ==', placeHolder:'Your title here...' },
 					{name:'Heading 2', key:'2', openWith:'=== ', closeWith:' ===', placeHolder:'Your title here...' },
@@ -149,11 +158,13 @@
 					{name:'Url', openWith:"[[![Url:!:http://]!] ", closeWith:']', placeHolder:'Your text to link here...' },
 					{separator:'---------------' },
 					{name:'Quotes', openWith:'(!(> |!|>)!)', placeHolder:''},
-					{name:'Code', openWith:'(!(<source lang="[![Language:!:php]!]">|!|<pre>)!)', closeWith:'(!(</source>|!|</pre>)!)'} 
+					{name:'Code', openWith:'(!(<source lang="[![Language:!:php]!]">|!|<pre>)!)', closeWith:'(!(</source>|!|</pre>)!)'},
+					{separator:'---------------'},
+					{name:'Preview', call:'preview', className:"preview"} 
 				]
 			}
 		}
-	}, $.editor || {})
+	}, $.editor || {});
 	
 	$(function() {
 		// markItUp! Support
@@ -161,7 +172,11 @@
 			$('textarea.editor[data-editor="markItUp"]').each(function() {
 				var element = $(this);
 				var type = element.data('editorType') || 'html';
-				var settings = $.extend($.editor.types[type], element.data('editorSettings') || {});
+				var settings = $.extend({}, $.editor.types[type], element.data('editorSettings') || {});
+				
+				if(settings.previewParserPath && $.algid.admin.options.base.url) {
+					settings.previewParserPath = $.algid.admin.options.base.url + settings.previewParserPath;
+				}
 				
 				console.log(settings);
 				
