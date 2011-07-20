@@ -13,7 +13,7 @@
 				onShiftEnter: {keepDefault:false, placeHolder:'Your comment here', openWith:'\n\/* ', closeWith:' *\/'},
 				onCtrlEnter: {keepDefault:false, placeHolder:"classname", openWith:'\n.', closeWith:' { \n'},
 				onTab: {keepDefault:false, openWith:'  '},
-				markupSet:  [	
+				markupSet:  [
 					{name:'Class', className:'class', key:'N', placeHolder:'Properties here...', openWith:'.[![Class name]!] {\n', closeWith:'\n}'},
 					{separator:'---------------' },
 					{name:'Bold', className:'bold', key:'B', replaceWith:'font-weight:bold;'},
@@ -88,7 +88,7 @@
 					{name:'Heading 4', key:'4', openWith:'#### ', placeHolder:'Your title here...' },
 					{name:'Heading 5', key:'5', openWith:'##### ', placeHolder:'Your title here...' },
 					{name:'Heading 6', key:'6', openWith:'###### ', placeHolder:'Your title here...' },
-					{separator:'---------------' },		
+					{separator:'---------------' },
 					{name:'Bold', key:'B', openWith:'**', closeWith:'**'},
 					{name:'Italic', key:'I', openWith:'_', closeWith:'_'},
 					{separator:'---------------' },
@@ -145,7 +145,7 @@
 					{name:'Heading 3', key:'3', openWith:'==== ', closeWith:' ====', placeHolder:'Your title here...' },
 					{name:'Heading 4', key:'4', openWith:'===== ', closeWith:' =====', placeHolder:'Your title here...' },
 					{name:'Heading 5', key:'5', openWith:'====== ', closeWith:' ======', placeHolder:'Your title here...' },
-					{separator:'---------------' },		
+					{separator:'---------------' },
 					{name:'Bold', key:'B', openWith:"'''", closeWith:"'''"}, 
 					{name:'Italic', key:'I', openWith:"''", closeWith:"''"}, 
 					{name:'Stroke through', key:'S', openWith:'<s>', closeWith:'</s>'}, 
@@ -169,16 +169,14 @@
 	$(function() {
 		// markItUp! Support
 		if($.markItUp) {
-			$('textarea.editor[data-editor="markItUp"]').each(function() {
+			$('textarea[data-editor="markItUp"]').each(function() {
 				var element = $(this);
-				var type = element.data('editorType') || 'html';
+				var type = element.data('editorType').toLowerCase() || 'html';
 				var settings = $.extend({}, $.editor.types[type], element.data('editorSettings') || {});
 				
 				if(settings.previewParserPath && $.algid.admin.options.base.url) {
 					settings.previewParserPath = $.algid.admin.options.base.url + settings.previewParserPath;
 				}
-				
-				console.log(settings);
 				
 				element.markItUp(settings);
 			});
