@@ -169,19 +169,50 @@
 	$(function() {
 		var editors = $('textarea[data-editor]');
 		
-		// markItUp! Support
-		if($.markItUp) {
-			editors.filter('[data-editor="markItUp"]').each(function() {
-				var element = $(this);
-				var type = element.data('editorType').toLowerCase() || 'html';
-				var settings = $.extend({}, $.editor.types[type], element.data('editorSettings') || {});
-				
-				if(settings.previewParserPath && $.algid.admin.options.base.url) {
-					settings.previewParserPath = $.algid.admin.options.base.url + settings.previewParserPath;
-				}
-				
-				element.markItUp(settings);
-			}).end();
-		}
+		editors.each(enableEditor);
+		
+		editors.live('editorSwitch', function(){
+			var editor = $(this);
+			
+			// Remove existing editors first
+			if(editor.hasClass('markItUpEditor')) {
+				editor.markItUpRemove();
+			}
+			
+			enableMarkItUp.call(this);
+		});
 	});
+	
+	/**
+	 * Used to determine what kind of editor to enable.
+	 */
+	function enableEditor() {
+		var editor = $(this);
+		var library = editor.data('editor');
+		
+		switch(library) {
+		case 'markItUp':
+		case 'markitup':
+			if($.markItUp) {
+				enableMarkItUp.call(this);
+			}
+			
+			break;
+		}
+	}
+	
+	/**
+	 * Used to convert textarea fields into markItUp editors
+	 */
+	function enableMarkItUp() {
+		var element = $(this);
+		var type = element.data('editorType').toLowerCase() || 'html';
+		var settings = $.extend({}, $.editor.types[type], element.data('editorSettings') || {});
+		
+		if(settings.previewParserPath && $.algid.admin.options.base.url) {
+			settings.previewParserPath = $.algid.admin.options.base.url + settings.previewParserPath;
+		}
+		
+		element.markItUp(settings);
+	}
 }(jQuery));
