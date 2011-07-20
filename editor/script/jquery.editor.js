@@ -167,9 +167,11 @@
 	}, $.editor || {});
 	
 	$(function() {
+		var editors = $('textarea[data-editor]');
+		
 		// markItUp! Support
 		if($.markItUp) {
-			$('textarea[data-editor="markItUp"]').each(function() {
+			editors.filter('[data-editor="markItUp"]').each(function() {
 				var element = $(this);
 				var type = element.data('editorType').toLowerCase() || 'html';
 				var settings = $.extend({}, $.editor.types[type], element.data('editorSettings') || {});
@@ -179,7 +181,7 @@
 				}
 				
 				element.markItUp(settings);
-			});
+			}).end();
 		}
 	});
 }(jQuery));
