@@ -24,7 +24,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // ----------------------------------------------------------------------------
-(function($) {
+(function(factory) {
+	if (typeof define === 'function' && define.amd) {
+		// AMD Registration
+		define('plugins/editor/script/markitup/jquery.markitup', [ 'jquery' ], factory);
+	} else {
+		// Browser globals
+		factory(jQuery);
+	}
+}(function($) {
 	$.fn.markItUp = function(settings, extraSettings) {
 		var options, ctrlKey, shiftKey, altKey;
 		ctrlKey = shiftKey = altKey = false;
@@ -590,4 +598,4 @@
 			$('textarea').trigger('insertion', [options]);
 		}
 	};
-})(jQuery);
+}));
