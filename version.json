@@ -1,8 +1,8 @@
 {
-	"archive": "http://github.com/emberfeather/algid-editor/tarball/0.1.0",
+	"archive": "http://github.com/emberfeather/algid-editor/tarball/0.1.1",
 	"key": "editor",
 	"title": "Editor",
 	"releaseNotes": "http://github.com/emberfeather/algid-editor/wiki/Release-Notes",
 	"URL": "http://github.com/emberfeather/algid-editor",
-	"version": "0.1.0"
+	"version": "0.1.1"
 }

@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
 // markItUp! Universal MarkUp Engine, JQuery plugin
-// v 1.1.11
+// v 1.1.x
 // Dual licensed under the MIT and GPL licenses.
 // ----------------------------------------------------------------------------
 // Copyright (C) 2007-2011 Jay Salvat
@@ -24,7 +24,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // ----------------------------------------------------------------------------
-(function($) {
+(function(factory) {
+	if (typeof define === 'function' && define.amd) {
+		// AMD Registration
+		define('plugins/editor/script/markitup/jquery.markitup', [ 'jquery' ], factory);
+	} else {
+		// Browser globals
+		factory(jQuery);
+	}
+}(function($) {
 	$.fn.markItUp = function(settings, extraSettings) {
 		var options, ctrlKey, shiftKey, altKey;
 		ctrlKey = shiftKey = altKey = false;
@@ -250,13 +258,12 @@
 					string = string || selection;
 
 					var lines = selection.split(/\r?\n/), blocks = [];
+					
 					for (var l=0; l < lines.length; l++) {
 						line = lines[l];
-						if ($.trim(line) == '') {
-							continue;
-						}
-						if (line.match(/ +$/)) {
-							blocks.push(openWith + line.replace(/ $/, '') + closeWith + ' ');
+						var trailingSpaces;
+						if (trailingSpaces = line.match(/ *$/)) {
+							blocks.push(openWith + line.replace(/ *$/g, '') + closeWith + trailingSpaces);
 						} else {
 							blocks.push(openWith + line + closeWith);
 						}
@@ -591,4 +598,4 @@
 			$('textarea').trigger('insertion', [options]);
 		}
 	};
-})(jQuery);
+}));
